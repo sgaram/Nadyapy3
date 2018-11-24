@@ -12,24 +12,60 @@ from googletrans import Translator
 botStart = time.time()
 
 nadya = LINE()
-#nadya = LINE("TOKEN KAMU")
+#nadya = LINE("EzTm9lnDK8ZGq4AbTvIb.3Zg5eTOuWfkqtUnBzihrAW.TNsqP8/nmg67eG/WPI/ab7kjfqtNrTLbUAJrSrWfls4=')
 #nadya = LINE("Email","Password")
 nadya.log("Auth Token : " + str(nadya.authToken))
 channelToken = nadya.getChannelResult()
 nadya.log("Channel Token : " + str(channelToken))
 
+ki = LINE()
+#ki = LINE("Ez9sVJEKE2cqdmeqh7D8.9b6szpiJ3KHyLZhfedasIa.gZpzYm+MSNTjvsyMZPwL4Xx8apVippJLZ9QdigkJQ1k=')
+#ki = LINE("Email","Password")
+ki.log("Auth Token : " + str(ki.authToken))
+channelToken = ki.getChannelResult()
+ki.log("Channel Token : " + str(channelToken))
+
+ki2 = LINE()
+#ki2 = LINE("EzHz7KSuv3vCGDhzDXt7.45wCzREf2FA1zn5gJNirDW.MaQ42HIbhrD4OowPOdbJFnVzoMBuFpLMme9bS6zIEx4=")
+#ki2 = LINE("Email","Password")
+ki2.log("Auth Token : " + str(ki2.authToken))
+channelToken = ki2.getChannelResult()
+ki2.log("Channel Token : " + str(channelToken))
+
+KAC = [nadya,ki,ki2]
+
 nadyaMID = nadya.profile.mid
+kiMID = ki.profile.mid
+ki2MID = ki2.profile.mid
+
+Bots = [nadyaMID,kiMID,ki2MID]
+creator = ["u9f09cfcb17d037e2936b751bd9d40ead"]
+Owner = ["u9f09cfcb17d037e2936b751bd9d40ead"]
+admin = ["u9f09cfcb17d037e2936b751bd9d40ead"]
+
 nadyaProfile = nadya.getProfile()
+kiProfile = ki.getProfile()
+ki2Profile = ki2.getProfile()
+
 lineSettings = nadya.getSettings()
+kiSettings = ki.getSettings()
+ki2Settings = ki2.getSettings()
+
 oepoll = OEPoll(nadya)
+oepoll1 = OEPoll(ki)
+oepoll2 = OEPoll(ki2)
+
+responsename = nadya.getProfile().displayName
+responsename2 = ki.getProfile().displayName
+responsename3 = ki2.getProfile().displayName
 #==============================================================================#
-readOpen = codecs.open("read.json","r","utf-8")
-settingsOpen = codecs.open("temp.json","r","utf-8")
 
-read = json.load(readOpen)
-settings = json.load(settingsOpen)
-
-
+with open('Owner.json', 'r') as fp:
+    Owner = json.load(fp)
+    
+with open('admin.json', 'r') as fp:
+    admin = json.load(fp)
+    
 myProfile = {
 	"displayName": "",
 	"statusMessage": "",
@@ -39,26 +75,25 @@ myProfile = {
 myProfile["displayName"] = nadyaProfile.displayName
 myProfile["statusMessage"] = nadyaProfile.statusMessage
 myProfile["pictureStatus"] = nadyaProfile.pictureStatus
+
+readOpen = codecs.open("read.json","r","utf-8")
+settingsOpen = codecs.open("temp.json","r","utf-8")
+
 #==============================================================================#
+
+read = json.load(readOpen)
+settings = json.load(settingsOpen)
+
+#if settings["restartPoint"] != None:
+#    nadya.sendMessage(settings["restartPoint"], "Bot kembali aktif")
+#    settings["restartBot"] = None
+
 def restartBot():
     print ("[ INFO ] BOT RESETTED")
     backupData()
-#    time.sleep(3)
+#    time.sleep(10)
     python = sys.executable
     os.execl(python, python, *sys.argv)
-    
-def backupData():
-    try:
-        backup = settings
-        f = codecs.open('temp.json','w','utf-8')
-        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
-        backup = read
-        f = codecs.open('read.json','w','utf-8')
-        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
-        return True
-    except Exception as error:
-        logError(error)
-        return False    
     
 def logError(text):
     nadya.log("[ ERROR ] " + str(text))
@@ -84,6 +119,13 @@ def helpmessage():
                   "╠➥ Help" + "\n" + \
                   "╠➥ Translate" + "\n" + \
                   "╠➥ Texttospeech" + "\n" + \
+                  "║" + "\n" + \
+                  "╠✪〘 Protect 〙✪═══════" + "\n" + \
+                  "╠➥ Protect 「On/Off」" + "\n" + \
+                  "╠➥ QrProtect 「On/Off」" + "\n" + \
+                  "╠➥ InviteProtect 「On/Off」" + "\n" + \
+                  "╠➥ CancelProtect 「On/Off」" + "\n" + \
+                  "╠➥ SetPro 「On/Off」" + "\n" + \
                   "║" + "\n" + \
                   "╠✪〘 Status 〙✪════════" + "\n" + \
                   "╠➥ Restart" + "\n" + \
@@ -151,11 +193,27 @@ def helpmessage():
                   "╠➥ SearchImage「Search」" + "\n" + \
                   "╠➥ ScreenshootWebsite「LinkUrl」" + "\n" + \
                   "║" + "\n" + \
+                  "╠✪〘 Bot 〙✪═════════" + "\n" + \
+                  "╠➥ AdminAdd" + "\n" + \
+                  "╠➥ AdminDel" + "\n" + \
+                  "╠➥ AdminList" + "\n" + \
+                  "╠➥ OwnerAdd" + "\n" + \
+                  "╠➥ OwnerDel" + "\n" + \
+                  "╠➥ OwnerList" + "\n" + \
+                  "╠➥ BanContact" + "\n" + \
+                  "╠➥ UnbanContact" + "\n" + \
+                  "╠➥ BanList" + "\n" + \
+                  "╠➥ ClearBan" + "\n" + \
+                  "╠➥ Respon" + "\n" + \
+                  "╠➥ Absen" + "\n" + \
+                  "╠➥ JoinAll" + "\n" + \
+                  "╠➥ ByeAll" + "\n" + \
+                  "║" + "\n" + \
                   "╚═〘 Credits By: ©Nadya_TJ™  〙"
     return helpMessage
     
 def helptexttospeech():
-    helpTextToSpeech =   "╔══[ T E X T   T O   S P E E C H ]" + "\n" + \
+    helpTextToSpeech =   "╔══〘 T E X T   T O   S P E E C H 〙" + "\n" + \
                          "╠ af : Afrikaans" + "\n" + \
                          "╠ sq : Albanian" + "\n" + \
                          "╠ ar : Arabic" + "\n" + \
@@ -209,12 +267,12 @@ def helptexttospeech():
                          "╠ uk : Ukrainian" + "\n" + \
                          "╠ vi : Vietnamese" + "\n" + \
                          "╠ cy : Welsh" + "\n" + \
-                         "╚══[ Jangan Typo ]" + "\n" + "\n\n" + \
-                          "Contoh : say-id Nadya Cantik"
+                         "╚══〘 Jangan Typo 〙" + "\n" + "\n\n" + \
+                          "Contoh : say-en Nadya Cantik"
     return helpTextToSpeech
     
 def helptranslate():
-    helpTranslate =    "╔══[ T R A N S L A T E ]" + "\n" + \
+    helpTranslate =    "╔══〘 T R A N S L A T E 〙" + "\n" + \
                        "╠ af : afrikaans" + "\n" + \
                        "╠ sq : albanian" + "\n" + \
                        "╠ am : amharic" + "\n" + \
@@ -321,10 +379,32 @@ def helptranslate():
                        "╠ zu : zulu" + "\n" + \
                        "╠ fil : Filipino" + "\n" + \
                        "╠ he : Hebrew" + "\n" + \
-                       "╚══[ Jangan Typo ]" + "\n" + "\n\n" + \
-                         "Contoh : tr-id Nadya Cantik"
+                       "╚══〘 Jangan Typo 〙" + "\n" + "\n\n" + \
+                         "Contoh : tr-en Nadya Cantik"
     return helpTranslate
 #==============================================================================#
+def backupData():
+    try:
+        backup = settings
+        f = codecs.open('temp.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
+        backup = read
+        f = codecs.open('read.json','w','utf-8')
+        json.dump(backup, f, sort_keys=True, indent=4, ensure_ascii=False)
+        return True
+    except Exception as error:
+        logError(error)
+        return False
+        
+def command(text):
+    pesan = text.lower()
+    if pesan.startswith(settings["keyCommand"]):
+        cmd = pesan.replace(settings["keyCommand"],"")
+    else:
+        cmd = "Undefined command"
+    return cmd        
+
+
 def lineBot(op):
     try:
         if op.type == 0:
@@ -335,16 +415,82 @@ def lineBot(op):
             if settings["autoAdd"] == True:
                 nadya.sendMessage(op.param1, "Halo {} terimakasih telah menambahkan saya sebagai teman :D".format(str(nadya.getContact(op.param1).displayName)))
         if op.type == 13:
-            print ("[ 13 ] NOTIFIED INVITE GROUP")
+            print ("[ 13 ] NOTIFIED INVITE INTO GROUP")
             group = nadya.getGroup(op.param1)
+            contact = nadya.getContact(op.param2)
             if settings["autoJoin"] == True:
-                nadya.acceptGroupInvitation(op.param1)
-        if op.type == 24:
-            print ("[ 24 ] NOTIFIED LEAVE ROOM")
-            if settings["autoLeave"] == True:
-                nadya.leaveRoom(op.param1)
-        if op.type == 25:
-            print ("[ 25 ] SEND MESSAGE")
+                if settings["autoReject"]["status"] == True:
+                    if len(group.members) > settings["autoReject"]["members"]:
+                        nadya.acceptGroupInvitation(op.param1)
+                    else:
+                        nadya.rejectGroupInvitation(op.param1)
+                else:
+                    nadya.acceptGroupInvitation(op.param1)
+            gInviMids = []
+            for z in group.invitee:
+                if z.mid in op.param3:
+                    gInviMids.append(z.mid)
+            listContact = ""
+            if gInviMids != []:
+                for j in gInviMids:
+                    name_ = nadya.getContact(j).displayName
+                    listContact += "\n      + {}".format(str(name_))
+
+            arg = "   Group Name : {}".format(str(group.name))
+            arg += "\n   Executor : {}".format(str(contact.displayName))
+            arg += "\n   List User Invited : {}".format(str(listContact))
+            print (arg)
+                
+        if op.type == 17:
+            print ("[ 17 ]  NOTIFIED ACCEPT GROUP INVITATION")
+            group = nadya.getGroup(op.param1)
+            contact = nadya.getContact(op.param2)
+            arg = "   Group Name : {}".format(str(group.name))
+            arg += "\n   User Join : {}".format(str(contact.displayName))
+            print (arg)
+#-------------------------------------------------------------------------------
+        if op.type == 26:
+            msg = op.message
+            if msg.contentType == 13:
+                if settings["wblack"] == True:
+                    if msg.contentMetadata["mid"] in settings["commentBlack"]:
+                        nadya.sendMessage(msg.to,"sudah masuk daftar hitam")
+                        settings["wblack"] = False
+                    else:
+                        settings["commentBlack"][msg.contentMetadata["mid"]] = True
+                        settings["wblack"] = False
+                        nadya.sendMessage(msg.to,"Itu tidak berkomentar")
+                elif settings["dblack"] == True:
+                    if msg.contentMetadata["mid"] in settings["commentBlack"]:
+                        del settings["commentBlack"][msg.contentMetadata["mid"]]
+                        nadya.sendMessage(msg.to,"Done")
+                        settings["dblack"] = False
+                    else:
+                        settings["dblack"] = False
+                        nadya.sendMessage(msg.to,"Tidak ada dalam daftar hitam")
+#-------------------------------------------------------------------------------
+                elif settings["wblacklist"] == True:
+                    if msg.contentMetadata["mid"] in settings["blacklist"]:
+                        nadya.sendMessage(msg.to,"sudah masuk daftar hitam")
+                        settings["wblacklist"] = False
+                    else:
+                        settings["blacklist"][msg.contentMetadata["mid"]] = True
+                        settings["wblacklist"] = False
+                        nadya.sendMessage(msg.to,"Done")
+                        
+                elif settings["dblacklist"] == True:
+                    if msg.contentMetadata["mid"] in settings["blacklist"]:
+                        del settings["blacklist"][msg.contentMetadata["mid"]]
+                        nadya.sendMessage(msg.to,"Done")
+                        settings["dblacklist"] = False
+                    else:
+                        settings["dblacklist"] = False
+                        nadya.sendMessage(msg.to,"Done")
+                        
+                       
+#-------------------------------------------------------------------------------
+        if op.type == 26:
+            print ("[ 26 ] SEND MESSAGE COMMAND")
             msg = op.message
             text = msg.text
             msg_id = msg.id
@@ -364,7 +510,6 @@ def lineBot(op):
                 if text.lower() == 'help':
                     helpMessage = helpmessage()
                     nadya.sendMessage(to, str(helpMessage))
-                    nadya.sendContact(to, "u14f64e139a3817afaabe27d237afb36b")
                 elif text.lower() == 'texttospeech':
                     helpTextToSpeech = helptexttospeech()
                     nadya.sendMessage(to, str(helpTextToSpeech))
@@ -374,11 +519,12 @@ def lineBot(op):
 #==============================================================================#
                 elif text.lower() == 'speed':
                     start = time.time()
-                    nadya.sendMessage(to, "Prosses...")
+                    nadya.sendMessage(to, "Please Wait...")
                     elapsed_time = time.time() - start
                     nadya.sendMessage(to,format(str(elapsed_time)))
                 elif text.lower() == 'restart':
-                    nadya.sendMessage(to, "Restarting")
+                  if msg._from in Owner:    
+                    nadya.sendMessage(to, "Please Wait...")
                     time.sleep(5)
                     nadya.sendMessage(to, "Restart Sukses")
                     restartBot()
@@ -402,9 +548,9 @@ def lineBot(op):
                         ret_ += "\n╠ Friend : {}".format(str(len(contactlist)))
                         ret_ += "\n╠ Blocked : {}".format(str(len(blockedlist)))
                         ret_ += "\n╠══[ About Selfbot ]"
-                        ret_ += "\n╠ Version : Beta Test"
+                        ret_ += "\n╠ Version : Premium"
                         ret_ += "\n╠ Creator : {}".format(creator.displayName)
-                        ret_ += "\n╚══[ Dilarang Remake Tanpa Ijin :D ]"
+                        ret_ += "\n╚══[ Dilarang Remake Tanpa Ijin :P ]"
                         nadya.sendMessage(to, str(ret_))
                     except Exception as e:
                         nadya.sendMessage(msg.to, str(e))
@@ -412,6 +558,14 @@ def lineBot(op):
                 elif text.lower() == 'status':
                     try:
                         ret_ = "╔══[ Status ]"
+                        if settings["protect"] == True: ret_ += "\n╠ Protect ✅"
+                        else: ret_ += "\n╠ Protect ❌"
+                        if settings["qrprotect"] == True: ret_ += "\n╠ Qr Protect ✅"
+                        else: ret_ += "\n╠ Qr Protect ❌"
+                        if settings["inviteprotect"] == True: ret_ += "\n╠ Invite Protect ✅"
+                        else: ret_ += "\n╠ Invite Protect ❌"
+                        if settings["cancelprotect"] == True: ret_ += "\n╠ Cancel Protect ✅"
+                        else: ret_ += "\n╠ Cancel Protect ❌"
                         if settings["autoAdd"] == True: ret_ += "\n╠ Auto Add ✅"
                         else: ret_ += "\n╠ Auto Add ❌"
                         if settings["autoJoin"] == True: ret_ += "\n╠ Auto Join ✅"
@@ -428,6 +582,237 @@ def lineBot(op):
                         nadya.sendMessage(to, str(ret_))
                     except Exception as e:
                         nadya.sendMessage(msg.to, str(e))
+#-------------------------------------------------------------------------------
+                elif msg.text.lower().startswith("owneradd "):
+                    if msg._from in Owner:
+                        key = eval(msg.contentMetadata["MENTION"])
+                        key["MENTIONEES"][0]["M"]
+                        targets = []
+                        for x in key["MENTIONEES"]:
+                            targets.append(x["M"])
+                        for target in targets:
+                            try:
+                                Owner[target] = True
+                                f=codecs.open('Owner.json','w','utf-8')
+                                json.dump(Owner, f, sort_keys=True, indent=4,ensure_ascii=False)
+                                nadya.sendMessage(msg.to,"Owner ☢-Bot-☢\nAdd\nExecuted")
+                            except:
+                                pass
+                    else:
+                        nadya.sendMessage(msg.to,"Owner Permission Required")
+                    
+                elif msg.text.lower().startswith("ownerdel "):
+                    if msg._from in Owner:
+                        key = eval(msg.contentMetadata["MENTION"])
+                        key["MENTIONEES"][0]["M"]
+                        targets = []
+                        for x in key["MENTIONEES"]:
+                            targets.append(x["M"])
+                        for target in targets:
+                            try:
+                                del Owner[target]
+                                f=codecs.open('Owner.json','w','utf-8')
+                                json.dump(Owner, f, sort_keys=True, indent=4,ensure_ascii=False)
+                                nadya.sendMessage(msg.to,"Owner ☢-Bot-☢\nRemove\nExecuted")
+                            except:
+                                pass
+                    else:
+                        nadya.sendMessage(msg.to,"Owner Permission Required")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'ownerlist':
+                    if msg._from in Owner:
+                        if Owner == []:
+                            nadya.sendMessage(msg.to,"The Ownerlist is empty")
+                        else:
+                            nadya.sendMessage(msg.to,"Tunggu...")
+                            mc = "╔═══════════════\n╠♥ ✿✿✿ NADYA_TJ ✿✿✿ ♥\n╠══✪〘 Owner List 〙✪═══\n"
+                            for mi_d in admin:
+                                mc += "╠✪ " +nadya.getContact(mi_d).displayName + "\n"
+                            nadya.sendMessage(msg.to,mc + "╠═══════════════\n╠✪〘 line.me/ti/p/~nad_nad. 〙\n╚═══════════════")
+#-------------------------------------------------------------------------------
+                elif msg.text.lower().startswith("adminadd "):
+                    if msg._from in Owner:
+                        targets = []
+                        key = eval(msg.contentMetadata["MENTION"])
+                        key["MENTIONEES"][0]["M"]
+                        for x in key["MENTIONEES"]:
+                            targets.append(x["M"])
+                        for target in targets:
+                            try:
+                                admin[target] = True
+                                f=codecs.open('admin.json','w','utf-8')
+                                json.dump(admin, f, sort_keys=True, indent=4,ensure_ascii=False)
+                                nadya.sendMessage(msg.to,"Admin ☢-Bot-☢\nAdd\nExecuted")
+                                break
+                            except:
+                                nadya.sendMessage(msg.to,"Added Target Fail !")
+                                break
+                    else:
+                        nadya.sendMessage(msg.to,"Owner Permission Required")
+                    
+                elif msg.text.lower().startswith("admindel "):
+                    if msg._from in Owner:
+                        targets = []
+                        key = eval(msg.contentMetadata["MENTION"])
+                        key["MENTIONEES"][0]["M"]
+                        for x in key["MENTIONEES"]:
+                            targets.append(x["M"])
+                        for target in targets:
+                            try:
+                                del admin[target]
+                                f=codecs.open('admin.json','w','utf-8')
+                                json.dump(admin, f, sort_keys=True, indent=4,ensure_ascii=False)
+                                nadya.sendMessage(msg.to,"Admin ☢-Bot-☢\nRemove\nExecuted")
+                                break
+                            except:
+                                nadya.sendMessage(msg.to,"Deleted Target Fail !")
+                            break
+                    else:
+                        nadya.sendMessage(msg.to,"Owner Permission Required")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'adminlist':
+                    if msg._from in Owner:
+                        if admin == []:
+                            nadya.sendMessage(msg.to,"The Adminlist is empty")
+                        else:
+                            nadya.sendMessage(msg.to,"Tunggu...")
+                            mc = "╔═══════════════\n╠♥ ✿✿✿ NADYA_TJ ✿✿✿ ♥\n╠══✪〘 Admin List 〙✪═══\n"
+                            for mi_d in admin:
+                                mc += "╠✪ " +nadya.getContact(mi_d).displayName + "\n"
+                            nadya.sendMessage(msg.to,mc + "╠═══════════════\n╠✪〘 line.me/ti/p/~nad_nad. 〙\n╚═══════════════")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'protect on':
+                    if msg._from in Owner:
+                        if settings["protect"] == True:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Already On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Set To On")
+                        else:
+                            settings["protect"] = True
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Set To On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Already On")
+                                
+                elif text.lower() == 'protect off':
+                    if msg._from in Owner:
+                        if settings["protect"] == False:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Already Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Set To Off")
+                        else:
+                            settings["protect"] = False
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Set To Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Already Off")
+#----------------------------------------------------------------------------------------                        
+                elif text.lower() == 'qrprotect on':
+                    if msg._from in Owner:
+                        if settings["qrprotect"] == True:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Already On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Set To On")
+                        else:
+                            settings["qrprotect"] = True
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Set To On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Already On")
+                                
+                elif text.lower() == 'qrprotect off':
+                    if msg._from in Owner:
+                        if settings["qrprotect"] == False:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Already Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Set To Off")
+                        else:
+                            settings["qrprotect"] = False
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Set To Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Qr Already Off")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'inviteprotect on':
+                    if msg._from in Owner:
+                        if settings["inviteprotect"] == True:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Already On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Set To On")
+                        else:
+                            settings["inviteprotect"] = True
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Set To On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Already On")
+                                
+                elif text.lower() == 'inviteprotect off':
+                    if msg._from in Owner:
+                        if settings["inviteprotect"] == False:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Already Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Set To Off")
+                        else:
+                            settings["inviteprotect"] = False
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Set To Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Invite Already Off")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'cancelprotect on':
+                    if msg._from in Owner:
+                        if settings["cancelprotect"] == True:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Already On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Set To On")
+                        else:
+                            settings["cancelprotect"] = True
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Set To On")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Already On")
+                                
+                elif text.lower() == 'cancelprotect off':
+                    if msg._from in Owner:
+                        if settings["cancelprotect"] == False:
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Already Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Set To Off")
+                        else:
+                            settings["cancelprotect"] = False
+                            if settings["lang"] == "JP":
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Set To Off")
+                            else:
+                                nadya.sendMessage(msg.to,"➲ Protection Cancel Invite Already Off")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'setpro on':
+                    if msg._from in Owner:
+                        settings["protect"] = True
+                        settings["qrprotect"] = True
+                        settings["inviteprotect"] = True
+                        settings["cancelprotect"] = True
+                        nadya.sendMessage(msg.to,"➲ All Protect Set To On")
+                    else:
+                        nadya.sendMessage(msg.to,"Just for Owner")
+                        		            
+                elif text.lower() == 'setpro off':
+                    if msg._from in Owner:
+                        settings["protect"] = False
+                        settings["qrprotect"] = False
+                        settings["inviteprotect"] = False
+                        settings["cancelprotect"] = False
+                        nadya.sendMessage(msg.to,"➲ All Protect Set To Off")
+                    else:
+                        nadya.sendMessage(msg.to,"Just for Owner")
+#-------------------------------------------------------------------------------
                 elif text.lower() == 'autoadd on':
                     settings["autoAdd"] = True
                     nadya.sendMessage(to, "Berhasil mengaktifkan Auto Add")
@@ -435,15 +820,19 @@ def lineBot(op):
                     settings["autoAdd"] = False
                     nadya.sendMessage(to, "Berhasil menonaktifkan Auto Add")
                 elif text.lower() == 'autojoin on':
+                  if msg._from in Owner:    
                     settings["autoJoin"] = True
                     nadya.sendMessage(to, "Berhasil mengaktifkan Auto Join")
                 elif text.lower() == 'autojoin off':
+                  if msg._from in Owner:    
                     settings["autoJoin"] = False
                     nadya.sendMessage(to, "Berhasil menonaktifkan Auto Join")
                 elif text.lower() == 'autoleave on':
+                  if msg._from in Owner:
                     settings["autoLeave"] = True
                     nadya.sendMessage(to, "Berhasil mengaktifkan Auto Leave")
-                elif text.lower() == 'autojoin off':
+                elif text.lower() == 'autoleave off':
+                  if msg._from in Owner:
                     settings["autoLeave"] = False
                     nadya.sendMessage(to, "Berhasil menonaktifkan Auto Leave")
                 elif text.lower() == 'autoread on':
@@ -464,10 +853,45 @@ def lineBot(op):
                 elif text.lower() == 'detectmention off':
                     settings["datectMention"] = False
                     nadya.sendMessage(to, "Berhasil menonaktifkan Detect Mention")
-                elif text.lower() == 'clonecontact':
-                    settings["copy"] = True
-                    nadya.sendMessage(to, "Kirim Contact Yang Mau Di Copy")
+                elif text.lower() == 'autojoinlink on':
+                    settings["autoJoinTicket"] = True
+                    nadya.sendMessage(to, "Berhasil mengaktifkan Auto Join Link")
+                elif text.lower() == 'autojoinlink off':
+                    settings["autoJoinTicket"] = False
+                    nadya.sendMessage(to, "Berhasil menonaktifkan Auto Join Link")                    
 #==============================================================================#
+                elif text.lower() == "respon":
+                    nadya.sendMessage(msg.to,responsename)
+                    ki.sendMessage(msg.to,responsename2)
+                    ki2.sendMessage(msg.to,responsename3)
+                    
+                elif msg.text.lower() == 'absen':
+                    if msg._from in Owner:
+                        nadya.sendContact(to, nadyaMID)
+                        ki.sendContact(to, kiMID)
+                        ki2.sendContact(to, ki2MID)
+
+                elif text.lower() in ["byeall"]:
+                  if msg._from in Owner:    
+                    ki.leaveGroup(msg.to)
+                    ki2.leaveGroup(msg.to)
+
+                elif text.lower() in ["joinall"]:
+                  if msg._from in Owner:    
+                    G = nadya.getGroup(msg.to)
+                    ginfo = nadya.getGroup(msg.to)
+                    G.preventedJoinByTicket = False
+                    nadya.updateGroup(G)
+                    invsend = 0
+                    Ticket = nadya.reissueGroupTicket(msg.to)
+                    ki.acceptGroupInvitationByTicket(msg.to,Ticket)
+                    ki2.acceptGroupInvitationByTicket(msg.to,Ticket)
+                    G = nadya.getGroup(msg.to)
+                    G.preventedJoinByTicket = True
+                    nadya.updateGroup(G)
+                    G.preventedJoinByTicket(G)
+                    nadya.updateGroup(G)
+
                 elif text.lower() == 'me':
                     sendMessageWithMention(to, nadyaMID)
                     nadya.sendContact(to, nadyaMID)
@@ -577,6 +1001,7 @@ def lineBot(op):
                                 path = nadya.getProfileCoverURL(ls)
                                 nadya.sendImageWithURL(msg.to, str(path))
                 elif msg.text.lower().startswith("cloneprofile "):
+                  if msg._from in Owner:    
                     if 'MENTION' in msg.contentMetadata.keys()!= None:
                         names = re.findall(r'@(\w+)', text)
                         mention = ast.literal_eval(msg.contentMetadata['MENTION'])
@@ -589,8 +1014,8 @@ def lineBot(op):
                             nadya.sendMessage(msg.to, "Berhasil clone member tunggu beberapa saat sampai profile berubah")
                         except:
                             nadya.sendMessage(msg.to, "Gagal clone member")
-                            
                 elif text.lower() == 'restoreprofile':
+                  if msg._from in Owner:    
                     try:
                         nadyaProfile.displayName = str(myProfile["displayName"])
                         nadyaProfile.statusMessage = str(myProfile["statusMessage"])
@@ -600,7 +1025,6 @@ def lineBot(op):
                         nadya.sendMessage(msg.to, "Berhasil restore profile tunggu beberapa saat sampai profile berubah")
                     except:
                         nadya.sendMessage(msg.to, "Gagal restore profile")
-                        
 #==============================================================================#
                 elif msg.text.lower().startswith("mimicadd "):
                     targets = []
@@ -670,7 +1094,7 @@ def lineBot(op):
                         group = nadya.getGroup(to)
                         if group.preventedJoinByTicket == False:
                             ticket = nadya.reissueGroupTicket(to)
-                            nadya.sendMessage(to, "[ Group Ticket ]\nhttps://nadya.me/R/ti/g/{}".format(str(ticket)))
+                            nadya.sendMessage(to, "[ Group Ticket ]\nhttps://line.me/R/ti/g/{}".format(str(ticket)))
                         else:
                             nadya.sendMessage(to, "Grup qr tidak terbuka silahkan buka terlebih dahulu dengan perintah {}openqr".format(str(settings["keyCommand"])))
                 elif text.lower() == 'groupticket on':
@@ -706,7 +1130,7 @@ def lineBot(op):
                         gTicket = "Tidak ada"
                     else:
                         gQr = "Terbuka"
-                        gTicket = "https://nadya.me/R/ti/g/{}".format(str(nadya.reissueGroupTicket(group.id)))
+                        gTicket = "https://line.me/R/ti/g/{}".format(str(nadya.reissueGroupTicket(group.id)))
                     path = "http://dl.profile.line-cdn.net/" + group.pictureStatus
                     ret_ = "╔══[ Group Info ]"
                     ret_ += "\n╠ Nama Group : {}".format(str(group.name))
@@ -739,6 +1163,77 @@ def lineBot(op):
                             no += 1
                         ret_ += "\n╚══[ Total {} Groups ]".format(str(len(groups)))
                         nadya.sendMessage(to, str(ret_))
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'clearban':
+                    if msg._from in Owner:
+                        settings["blacklist"] = {}
+                        nadya.sendMessage(msg.to,"Blacklist Dibersihkan")
+                        
+                elif text.lower() == 'bancontact':
+                    if msg._from in Owner:
+                        settings["wblacklist"] = True
+                        nadya.sendMessage(msg.to,"Send Contact")
+                        
+                elif msg.text in ["unbancontact"]:
+                    if msg._from in Owner:
+                        settings["dblacklist"] = True
+                        nadya.sendMessage(msg.to,"Send Contact")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'banlist':
+                    if msg._from in Owner:
+                        if settings["blacklist"] == {}:
+                            nadya.sendMessage(msg.to,"Tidak Ada Banlist")
+                        else:
+                            nadya.sendMessage(msg.to,"Daftar Banlist")
+                            num=1
+                            msgs="══════════List Blacklist═════════"
+                            for mi_d in settings["blacklist"]:
+                                msgs+="\n[%i] %s" % (num, nadya.getContact(mi_d).displayName)
+                                num=(num+1)
+                            msgs+="\n══════════List Blacklist═════════\n\nTotal Blacklist :  %i" % len(settings["blacklist"])
+                            nadya.sendMessage(msg.to, msgs)
+#=======================================================================================
+                elif msg.text.lower().startswith("kill "):
+                    if msg._from in Owner:
+                       targets = []
+                       key = eval(msg.contentMetadata["MENTION"])
+                       key["MENTIONEES"][0]["M"]
+                       for x in key["MENTIONEES"]:
+                           targets.append(x["M"])
+                       for target in targets:
+                           try:
+                               random.choice(KAC).kickoutFromGroup(msg.to,[target])
+                           except:
+                               random.choice(KAC).sendText(msg.to,"Error")
+#-------------------------------------------------------------------------------
+                elif text.lower() == 'kickallmember':
+                    if msg._from in Owner:
+                        if msg.toType == 2:
+                            print ("[ 19 ] KICK ALL MEMBER")
+                            _name = msg.text.replace("kickallmember","")
+                            gs = nadya.getGroup(msg.to)
+                            gs = ki.getGroup(msg.to)
+                            gs = ki2.getGroup(msg.to)
+    #                       nadya.sendMessage(msg.to,"「 Bye All 」")
+    #                       nadya.sendMessage(msg.to,"「 Sory guys 」")
+                            targets = []
+                            for g in gs.members:
+                                if _name in g.displayName:
+                                    targets.append(g.mid)
+                            if targets == []:
+                                nadya.sendMessage(msg.to,"Not Found")
+                            else:
+                                for target in targets:
+                                    if not target in Bots:
+                                        if not target in Owner:
+                                            if not target in admin:
+                                                try:
+                                                    klist=[line,ki,ki2,ki3,ki4]
+                                                    kicker=random.choice(klist)
+                                                    kicker.kickoutFromGroup(msg.to,[target])
+                                                    print (msg.to,[g.mid])
+                                                except:
+                                                    nadya.sendMessage(msg.to,"") 
 #==============================================================================#          
                 elif text.lower() == 'mention':
                     group = nadya.getGroup(msg.to)
@@ -886,1159 +1381,10 @@ def lineBot(op):
                         pass
                     else:
                         nadya.sendMessage(receiver,"Lurking has not been set.")
+                        
 #==============================================================================#
-                elif msg.text.lower().startswith("say-af "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'af'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-        
-                elif msg.text.lower().startswith("say-sq "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'sq'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ar "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ar'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-hy "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'hy'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-bn "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'bn'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ca "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ca'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-zh "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'zh'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-zh-cn "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'zh-cn'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-zh-tw "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'zh-tw'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-zh-yue "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'zh-yue'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-hr "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'hr'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-cs "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'cs'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-da "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'da'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-nl "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'nl'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-en "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'en'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-en-au "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'en-au'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-en-uk "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'en-uk'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-en-us "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'en-us'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-eo "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'eo'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-fi "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'fi'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-fr "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'fr'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-de "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'de'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-el "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'el'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-hi "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'hi'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-hu "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'hu'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-is "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'is'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-id "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'id'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-it "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'it'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ja "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ja'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-km "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'km'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ko "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ko'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-la "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'la'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-lv "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'lv'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-mk "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'mk'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-no "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'no'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-pl "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'pl'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-pt "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'pt'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-do "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ro'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ru "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ru'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-sr "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'sr'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-si "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'si'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-sk "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'sk'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-es "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'es'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-es-es "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'es-es'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-es-us "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'es-us'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-sw "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'sw'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-sv "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'sv'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-ta "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'ta'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-th "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'th'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-tr "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'tr'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-uk "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'uk'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-vi "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'vi'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
-                    
-                elif msg.text.lower().startswith("say-cy "):
-                    sep = text.split(" ")
-                    say = text.replace(sep[0] + " ","")
-                    lang = 'cy'
-                    tts = gTTS(text=say, lang=lang)
-                    tts.save("hasil.mp3")
-                    nadya.sendAudio(msg.to,"hasil.mp3")
+ 
 #==============================================================================# 
-                elif msg.text.lower().startswith("tr-af "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='af')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sq "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sq')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-am "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='am')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ar "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ar')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-hy "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='hy')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-az "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='az')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-eu "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='eu')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-be "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='be')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-bn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='bn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-bs "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='bs')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-bg "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='bg')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ca "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ca')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ceb "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ceb')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ny "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ny')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-zh-cn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='zh-cn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-zh-tw "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='zh-tw')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-co "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='co')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-hr "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='hr')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-cs "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='cs')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-da "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='da')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-nl "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='nl')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-en "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='en')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-et "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='et')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-fi "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='fi')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-fr "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='fr')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-fy "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='fy')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-gl "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='gl')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ka "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ka')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-de "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='de')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-el "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='el')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-gu "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='gu')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ht "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ht')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ha "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ha')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-haw "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='haw')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-iw "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='iw')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-hi "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='hi')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-hmn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='hmn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-hu "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='hu')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-is "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='is')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ig "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ig')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-id "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='id')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ga "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ga')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-it "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='it')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ja "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ja')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-jw "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='jw')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-kn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='kn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-kk "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='kk')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-km "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='km')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ko "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ko')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ku "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ku')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ky "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ky')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-lo "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='lo')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-la "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='la')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-lv "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='lv')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-lt "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='lt')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-lb "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='lb')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mk "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mk')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mg "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mg')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ms "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ms')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ml "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ml')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mt "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mt')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mi "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mi')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mr "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mr')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-mn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='mn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-my "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='my')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ne "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ne')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-no "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='no')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ps "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ps')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-fa "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='fa')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-pl "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='pl')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-pt "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='pt')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-pa "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='pa')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ro "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ro')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ru "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ru')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sm "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sm')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-gd "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='gd')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sr "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sr')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-st "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='st')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sn "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sn')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sd "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sd')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-si "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='si')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sk "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sk')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sl "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sl')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-so "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='so')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-es "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='es')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-su "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='su')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sw "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sw')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-sv "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='sv')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-tg "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='tg')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ta "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ta')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-te "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='te')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-th "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='th')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-tr "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='tr')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-uk "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='uk')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-ur "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='ur')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-uz "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='uz')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-vi "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='vi')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-cy "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='cy')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-xh "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='xh')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-yi "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='yi')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-yo "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='yo')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-zu "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='zu')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-fil "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='fil')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
-                elif msg.text.lower().startswith("tr-he "):
-                    sep = text.split(" ")
-                    isi = text.replace(sep[0] + " ","")
-                    translator = Translator()
-                    hasil = translator.translate(isi, dest='he')
-                    A = hasil.text
-                    nadya.sendMessage(msg.to, A)
 #==============================================================================#   
                 elif text.lower() == 'kalender':
                     tz = pytz.timezone("Asia/Makassar")
@@ -2074,179 +1420,368 @@ def lineBot(op):
                     ret_ += "\n╠ Birthday : {}".format(str(data["data"]["ultah"]))
                     ret_ += "\n╠ Zodiak : {}".format(str(data["data"]["zodiak"]))
                     ret_ += "\n╚══[ Success ]"
-                    nadya.sendMessage(to, str(ret_))
-                elif "instagraminfo" in msg.text.lower():
-                    sep = text.split(" ")
-                    search = text.replace(sep[0] + " ","")
-                    with requests.session() as web:
-                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
-                        r = web.get("https://www.instagram.com/{}/?__a=1".format(search))
-                        try:
-                            data = json.loads(r.text)
-                            ret_ = "╔══[ Profile Instagram ]"
-                            ret_ += "\n╠ Nama : {}".format(str(data["user"]["full_name"]))
-                            ret_ += "\n╠ Username : {}".format(str(data["user"]["username"]))
-                            ret_ += "\n╠ Bio : {}".format(str(data["user"]["biography"]))
-                            ret_ += "\n╠ Pengikut : {}".format(format_number(data["user"]["followed_by"]["count"]))
-                            ret_ += "\n╠ Diikuti : {}".format(format_number(data["user"]["follows"]["count"]))
-                            if data["user"]["is_verified"] == True:
-                                ret_ += "\n╠ Verifikasi : Sudah"
-                            else:
-                                ret_ += "\n╠ Verifikasi : Belum"
-                            if data["user"]["is_private"] == True:
-                                ret_ += "\n╠ Akun Pribadi : Iya"
-                            else:
-                                ret_ += "\n╠ Akun Pribadi : Tidak"
-                            ret_ += "\n╠ Total Post : {}".format(format_number(data["user"]["media"]["count"]))
-                            ret_ += "\n╚══[ https://www.instagram.com/{} ]".format(search)
-                            path = data["user"]["profile_pic_url_hd"]
-                            nadya.sendImageWithURL(to, str(path))
-                            nadya.sendMessage(to, str(ret_))
-                        except:
-                            nadya.sendMessage(to, "Pengguna tidak ditemukan")
-                elif "instagrampost" in msg.text.lower():
-                    separate = msg.text.split(" ")
-                    user = msg.text.replace(separate[0] + " ","")
-                    profile = "https://www.instagram.com/" + user
-                    with requests.session() as x:
-                        x.headers['user-agent'] = 'Mozilla/5.0'
-                        end_cursor = ''
-                        for count in range(1, 999):
-                            print('PAGE: ', count)
-                            r = x.get(profile, params={'max_id': end_cursor})
-                        
-                            data = re.search(r'window._sharedData = (\{.+?});</script>', r.text).group(1)
-                            j    = json.loads(data)
-                        
-                            for node in j['entry_data']['ProfilePage'][0]['user']['media']['nodes']: 
-                                if node['is_video']:
-                                    page = 'https://www.instagram.com/p/' + node['code']
-                                    r = x.get(page)
-                                    url = re.search(r'"video_url": "([^"]+)"', r.text).group(1)
-                                    print(url)
-                                    nadya.sendVideoWithURL(msg.to,url)
-                                else:
-                                    print (node['display_src'])
-                                    nadya.sendImageWithURL(msg.to,node['display_src'])
-                            end_cursor = re.search(r'"end_cursor": "([^"]+)"', r.text).group(1)
-                elif "searchimage" in msg.text.lower():
-                    separate = msg.text.split(" ")
-                    search = msg.text.replace(separate[0] + " ","")
-                    with requests.session() as web:
-                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
-                        r = web.get("http://rahandiapi.herokuapp.com/imageapi?key=betakey&q={}".format(urllib.parse.quote(search)))
-                        data = r.text
-                        data = json.loads(data)
-                        if data["result"] != []:
-                            items = data["result"]
-                            path = random.choice(items)
-                            a = items.index(path)
-                            b = len(items)
-                            nadya.sendImageWithURL(to, str(path))
-                elif "searchyoutube" in msg.text.lower():
-                    sep = text.split(" ")
-                    search = text.replace(sep[0] + " ","")
-                    params = {"search_query": search}
-                    with requests.session() as web:
-                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
-                        r = web.get("https://www.youtube.com/results", params = params)
-                        soup = BeautifulSoup(r.content, "html5lib")
-                        ret_ = "╔══[ Youtube Result ]"
-                        datas = []
-                        for data in soup.select(".yt-lockup-title > a[title]"):
-                            if "&lists" not in data["href"]:
-                                datas.append(data)
-                        for data in datas:
-                            ret_ += "\n╠══[ {} ]".format(str(data["title"]))
-                            ret_ += "\n╠ https://www.youtube.com{}".format(str(data["href"]))
-                        ret_ += "\n╚══[ Total {} ]".format(len(datas))
-                        nadya.sendMessage(to, str(ret_))
-                elif "searchmusic" in msg.text.lower():
-                    sep = text.split(" ")
-                    search = text.replace(sep[0] + " ","")
-                    params = {'songname': search}
-                    with requests.session() as web:
-                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
-                        r = web.get("https://ide.fdlrcn.com/workspace/yumi-apis/joox?" + urllib.parse.urlencode(params))
-                        try:
-                            data = json.loads(r.text)
-                            for song in data:
-                                ret_ = "╔══[ Music ]"
-                                ret_ += "\n╠ Nama lagu : {}".format(str(song[0]))
-                                ret_ += "\n╠ Durasi : {}".format(str(song[1]))
-                                ret_ += "\n╠ Link : {}".format(str(song[4]))
-                                ret_ += "\n╚══[ reading Audio ]"
-                                nadya.sendMessage(to, str(ret_))
-                                nadya.sendAudioWithURL(to, song[3])
-                        except:
-                            nadya.sendMessage(to, "Musik tidak ditemukan")
-                elif "searchlyric" in msg.text.lower():
-                    sep = text.split(" ")
-                    search = text.replace(sep[0] + " ","")
-                    params = {'songname': search}
-                    with requests.session() as web:
-                        web.headers["User-Agent"] = random.choice(settings["userAgent"])
-                        r = web.get("https://ide.fdlrcn.com/workspace/yumi-apis/joox?" + urllib.parse.urlencode(params))
-                        try:
-                            data = json.loads(r.text)
-                            for song in data:
-                                songs = song[5]
-                                lyric = songs.replace('ti:','Title - ')
-                                lyric = lyric.replace('ar:','Artist - ')
-                                lyric = lyric.replace('al:','Album - ')
-                                removeString = "[1234567890.:]"
-                                for char in removeString:
-                                    lyric = lyric.replace(char,'')
-                                ret_ = "╔══[ Lyric ]"
-                                ret_ += "\n╠ Nama lagu : {}".format(str(song[0]))
-                                ret_ += "\n╠ Durasi : {}".format(str(song[1]))
-                                ret_ += "\n╠ Link : {}".format(str(song[4]))
-                                ret_ += "\n╚══[ Finish ]\n{}".format(str(lyric))
-                                nadya.sendMessage(to, str(ret_))
-                        except:
-                            nadya.sendMessage(to, "Lirik tidak ditemukan")
-            elif msg.contentType == 7:
-                if settings["checkSticker"] == True:
-                    stk_id = msg.contentMetadata['STKID']
-                    stk_ver = msg.contentMetadata['STKVER']
-                    pkg_id = msg.contentMetadata['STKPKGID']
-                    ret_ = "╔══[ Sticker Info ]"
-                    ret_ += "\n╠ STICKER ID : {}".format(stk_id)
-                    ret_ += "\n╠ STICKER PACKAGES ID : {}".format(pkg_id)
-                    ret_ += "\n╠ STICKER VERSION : {}".format(stk_ver)
-                    ret_ += "\n╠ STICKER URL : line://shop/detail/{}".format(pkg_id)
-                    ret_ += "\n╚══[ Finish ]"
-                    nadya.sendMessage(to, str(ret_))
-                    
-            elif msg.contentType == 13:
-                if settings["copy"] == True:
-                    _name = msg.contentMetadata["displayName"]
-                    copy = msg.contentMetadata["mid"]
-                    groups = nadya.getGroup(msg.to)
-                    targets = []
-                    for s in groups.members:
-                        if _name in s.displayName:
-                            print ("[Target] Copy")
-                            break                             
-                        else:
-                            targets.append(copy)
-                    if targets == []:
-                        nadya.sendText(msg.to, "Not Found...")
-                        pass
+                    nadya.sendMessage(to, str(ret_))                          
+#===============================================================================[NEW]                         
+            elif msg.text.lower().startswith("checkpraytime "):    
+                sep = text.split(" ")
+                location = text.replace(sep[0] + " ","")
+                with requests.session() as web:
+                    web.headers["user-agent"] = random.choice(settings["userAgent"])
+                    r = web.get("http://api.corrykalam.net/apisholat.php?lokasi={}".format(urllib.parse.quote(location)))
+                    data = r.text
+                    data = json.loads(data)
+                    if data[1] != "Subuh : " and data[2] != "Dzuhur : " and data[3] != "Ashr : " and data[4] != "Maghrib : " and data[5] != "Isha : ":
+                        ret_ = "╔══[ Prayer Schedule ]"
+                        ret_ += "\n╠ Lokasi : " + data[0]
+                        ret_ += "\n╠ " + data[1]
+                        ret_ += "\n╠ " + data[2]
+                        ret_ += "\n╠ " + data[3]
+                        ret_ += "\n╠ " + data[4]
+                        ret_ += "\n╠ " + data[5]
+                        ret_ += "\n╚══[ Complete ]"
                     else:
-                        for target in targets:
-                            try:
-                                nadya.cloneContactProfile(target)
-                                nadya.sendMessage(msg.to, "Berhasil clone member tunggu beberapa saat sampai profile berubah")
-                                settings['copy'] = False
-                                break
-                            except:
-                                     msg.contentMetadata = {'mid': target}
-                                     settings["copy"] = False
-                                     break                     
+                        ret_ = "[ Prayer Schedule ] Error : Lokasi tidak ditemukan" 
+                        nadya.sendMessage(to, str(ret_))
+                        
+            elif msg.text.lower().startswith("checkweather "):       
+                sep = text.split(" ")
+                location = text.replace(sep[0] + " ","")
+                with requests.session() as web:
+                    web.headers["user-agent"] = random.choice(settings["userAgent"])
+                    r = web.get("http://api.corrykalam.net/apicuaca.php?kota={}".format(urllib.parse.quote(location)))
+                    data = r.text
+                    data = json.loads(data)
+                    if "result" not in data:
+                        ret_ = "╔══[ Weather Status ]"
+                        ret_ += "\n╠ Lokasi : " + data[0].replace("Temperatur di kota ","")
+                        ret_ += "\n╠ Suhu : " + data[1].replace("Suhu : ","")
+                        ret_ += "\n╠ Kelembaban : " + data[2].replace("Kelembaban : ","")
+                        ret_ += "\n╠ Tekanan Udara : " + data[3].replace("Tekanan udara : ","")
+                        ret_ += "\n╠ Kecepatan Angin : " + data[4].replace("Kecepatan angin : ","")
+                        ret_ += "\n╚══[ Complete ]"
+                    else:
+                        ret_ = "[ Weather Status ] Error : Lokasi tidak ditemukan"
+                        nadya.sendMessage(to, str(ret_))
+
+            elif text.lower() == 'removeallchat':
+                nadya.removeAllMessages(op.param2)
+                nadya.sendMessage(to, "Berhasil hapus semua chat")
+
+            elif text.lower() == 'time':
+                nadya.sendMessage(to, "Goblok cek sendiri di tanggal jangan manja")
+
+            elif msg.text.lower().startswith("gbroadcast "):   
+                sep = text.split(" ")
+                txt = text.replace(sep[0] + " ","")
+                groups = nadya.groups
+                for group in groups:
+                    nadya.sendMessage(group, "[ Broadcast ]\n{}".format(str(txt)))
+                    nadya.sendMessage(to, "Berhasil broadcast ke {} group".format(str(len(groups))))
                     
-                    
+            elif msg.text.lower().startswith("fbroadcast "):   
+                sep = text.split(" ")
+                txt = text.replace(sep[0] + " ","")
+                friends = nadya.friends
+                for friend in friends:
+                    nadya.sendMessage(friend, "[ Broadcast ]\n{}".format(str(txt)))
+                    nadya.sendMessage(to, "Berhasil broadcast ke {} teman".format(str(len(friends))))
+            elif msg.text.lower().startswith("allbroadcast "):   
+                sep = text.split(" ")
+                txt = text.replace(sep[0] + " ","")
+                friends = nadya.friends
+                groups = nadya.groups
+                for group in groups:
+                    nadya.sendMessage(group, "[ Broadcast ]\n{}".format(str(txt)))
+                    nadya.sendMessage(to, "Berhasil broadcast ke {} group".format(str(len(groups))))
+                for friend in friends:
+                    nadya.sendMessage(friend, "[ Broadcast ]\n{}".format(str(txt)))
+                    nadya.sendMessage(to, "Berhasil broadcast ke {} teman".format(str(len(friends))))                             
+                                    
+#===============================================================================[nadyaMID - kiMID]
+        if op.type == 19:
+            print ("[ 19 ] KICKOUT NADYA MESSAGE")
+            try:
+                if op.param3 in nadyaMID:
+                    if op.param2 in kiMID:
+                        G = ki.getGroup(op.param1)
+#                        ginfo = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        ki.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki.updateGroup(G)
+                    else:
+                        G = ki.getGroup(op.param1)
+#                        ginfo = ki.getGroup(op.param1)
+                        ki.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        ki.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[nadyaMID - ki2MID]
+                elif op.param3 in nadyaMID:
+                    if op.param2 in ki2MID:
+                        G = ki2.getGroup(op.param1)
+#                        ginfo = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        ki2.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki2.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki2.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki2.updateGroup(G)
+                    else:
+                        G = ki2.getGroup(op.param1)
+#                        ginfo = ki2.getGroup(op.param1)
+                        ki2.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        ki2.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki2.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki2.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki2.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[nadyaMID - ki3MID]
+
+#-------------------------------------------------------------------------------[nadyaMID - ki4MID]
+#===============================================================================[kiMID nadyaMID]
+                if op.param3 in kiMID:
+                    if op.param2 in nadyaMID:
+                        G = nadya.getGroup(op.param1)
+#                        ginfo = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        nadya.updateGroup(G)
+                        invsend = 0
+                        Ticket = nadya.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        nadya.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        nadya.updateGroup(G)
+                    else:
+                        G = nadya.getGroup(op.param1)
+#                        ginfo = nadya.getGroup(op.param1)
+                        nadya.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        nadya.updateGroup(G)
+                        invsend = 0
+                        Ticket = nadya.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        nadya.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        nadya.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[kiMID ki2MID]
+                elif op.param3 in kiMID:
+                    if op.param2 in ki2MID:
+                        G = ki2.getGroup(op.param1)
+#                        ginfo = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        ki2.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki2.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki2.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki2.updateGroup(G)
+                    else:
+                        G = ki2.getGroup(op.param1)
+#                        ginfo = ki2.getGroup(op.param1)
+                        ki2.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        ki2.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki2.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki2.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki2.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki2.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[kiMID ki3MID]
+#===============================================================================[ki2MID nadyaMID]
+                if op.param3 in ki2MID:
+                    if op.param2 in nadyaMID:
+                        G = nadya.getGroup(op.param1)
+#                        ginfo = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        nadya.updateGroup(G)
+                        invsend = 0
+                        Ticket = nadya.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        nadya.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        nadya.updateGroup(G)
+                    else:
+                        G = nadya.getGroup(op.param1)
+#                        ginfo = nadya.getGroup(op.param1)
+                        nadya.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        nadya.updateGroup(G)
+                        invsend = 0
+                        Ticket = nadya.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = nadya.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        nadya.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        nadya.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[ki2MID kiMID]
+                elif op.param3 in ki2MID:
+                    if op.param2 in kiMID:
+                        G = ki.getGroup(op.param1)
+#                        ginfo = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = False
+                        ki.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki.updateGroup(G)
+                    else:
+                        G = ki.getGroup(op.param1)
+#                        ginfo = ki.getGroup(op.param1)
+                        ki.kickoutFromGroup(op.param1,[op.param2])
+                        G.preventedJoinByTicket = False
+                        ki.updateGroup(G)
+                        invsend = 0
+                        Ticket = ki.reissueGroupTicket(op.param1)
+                        nadya.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        ki2.acceptGroupInvitationByTicket(op.param1,Ticket)
+                        G = ki.getGroup(op.param1)
+                        G.preventedJoinByTicket = True
+                        ki.updateGroup(G)
+                        G.preventedJoinByTicket(G)
+                        ki.updateGroup(G)
+                        settings["blacklist"][op.param2] = True
+#-------------------------------------------------------------------------------[ki2MID ki3MID]
+#===============================================================================[ki3MID nadyaMID]
+
+                elif op.param2 not in Bots:
+                    if op.param2 in admin:
+                        pass
+                    elif settings["protect"] == True:
+                        settings["blacklist"][op.param2] = True
+                        random.choice(KAC).kickoutFromGroup(op.param1,[op.param2])
+                        random.choice(KAC).inviteIntoGroup(op.param1,[op.param3])
+                        random.choice(KAC).sendText(op.param1,"Don't Play bro...!")
+                        
+                else:
+                    pass
+            except:
+                pass
 #==============================================================================#
+        if op.type == 13:
+            if op.param2 not in Bots:
+                if op.param2 in admin:
+                    pass
+                elif settings["inviteprotect"] == True:
+                    settings["blacklist"][op.param2] = True
+                    random.choice(KAC).cancelGroupInvitation(op.param1,[op.param3])
+                    random.choice(KAC).kickoutFromGroup(op.param1,[op.param2])
+                    if op.param2 not in Bots:
+                        if op.param2 in admin:
+                            pass
+                        elif settings["cancelprotect"] == True:
+                            settings["blacklist"][op.param2] = True
+                            random.choice(KAC).cancelGroupInvitation(op.param1,[op.param3])	
+#-------------------------------------------------------------------------------
+        if op.type == 11:
+            if op.param2 not in Bots:
+                if op.param2 in admin and Bots and Owner:
+                    pass
+                elif settings["qrprotect"] == True:
+                    settings["blacklist"][op.param2] = True
+                    G = ki.getGroup(op.param1)
+                    G.preventedJoinByTicket = True
+                    ki.updateGroup(G)
+                    random.choice(KAC).kickoutFromGroup(op.param1,[op.param2])
+                else:
+                    nadya.sendMessage(op.param1,"Qr under protect")
+            else:
+                nadya.sendMessage(op.param1,"")
+#==============================================================================#
+        if op.type == 55:
+            print ("[ 55 ] NOTIFIED READ MESSAGE")
+            if op.param1 in read["readPoint"]:
+                _name = nadya.getContact(op.param2).displayName
+                tz = pytz.timezone("Asia/Jakarta")
+                timeNow = datetime.now(tz=tz)
+                timeHours = datetime.strftime(timeNow," (%H:%M)")
+                read["readMember"][op.param1][op.param2] = str(_name) + str(timeHours)
+        backupData()
+    except Exception as error:
+        logError(error)
+#==============================================================================#
+        if op.type == 26:
+            msg = op.message
+            if text.lower() == '/ti/g/':    
+                if settings["autoJoinTicket"] == True:
+                    link_re = re.compile('(?:line\:\/|line\.me\/R)\/ti\/g\/([a-zA-Z0-9_-]+)?')
+                    links = link_re.findall(text)
+                    n_links = []
+                    for l in links:
+                        if l not in n_links:
+                            n_links.append(l)
+                    for ticket_id in n_links:
+                        group = nadya.findGroupByTicket(ticket_id)
+                        nadya.acceptGroupInvitationByTicket(group.id,ticket_id)
+                        nadya.sendMessage(to, "Berhasil masuk ke group %s" % str(group.name)) 
+                        
         if op.type == 26:
             print ("[ 26 ] RECEIVE MESSAGE")
             msg = op.message
@@ -2283,24 +1818,28 @@ def lineBot(op):
                                     nadya.sendMessage(to, "sundala nu")
                                     sendMessageWithMention(to, contact.mid)
                                 break
-#==============================================================================#
-        if op.type == 55:
-            print ("[ 55 ] NOTIFIED READ MESSAGE")
-            try:
-                if op.param1 in read['readPoint']:
-                    if op.param2 in read['readMember'][op.param1]:
-                        pass
-                    else:
-                        read['readMember'][op.param1] += op.param2
-                    read['ROM'][op.param1][op.param2] = op.param2
-                    backupData()
-                else:
-                   pass
-            except:
-                pass
+                        
     except Exception as error:
         logError(error)
 #==============================================================================#
+# Auto join if BOT invited to group
+def NOTIFIED_INVITE_INTO_GROUP(op):
+    try:
+        nadya.acceptGroupInvitation(op.param1)
+        ki.acceptGroupInvitation(op.param1)
+        ki2.acceptGroupInvitation(op.param1)
+    except Exception as e:
+        nadya.log("[NOTIFIED_INVITE_INTO_GROUP] ERROR : " + str(e))
+# Auto kick if BOT out to group
+def NOTIFIED_KICKOUT_FROM_GROUP(op):
+    try:
+        if op.param2 not in Bots:
+            random.choice(KAC).kickoutFromGroup(op.param1,op.param2)
+        else:
+            pass
+    except Exception as e:
+        nadya.log("[NOTIFIED_KICKOUT_FROM_GROUP] ERROR : " + str(e))
+
 while True:
     try:
         ops = oepoll.singleTrace(count=50)
@@ -2309,4 +1848,4 @@ while True:
                 lineBot(op)
                 oepoll.setRevision(op.revision)
     except Exception as e:
-        logError(e)
+        logError(e)       
